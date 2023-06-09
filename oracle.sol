@@ -1,12 +1,18 @@
-// SPDX-License-identifier: MIT
-pragma solidity ^0.8.12;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.2;
 
-contract CeloPriceOracle {
-  uint256 public celoPrice;
+import "redstone-evm-connector/lib/contracts/message-based/PriceAwareOwnable.sol";
 
-  function submitPrice(uint256 _price) public {
-	// In a real-world scenario, there should be checks here to ensure
-	// the sender is a trusted oracle and data is not too far from the current price.
-	celoPrice = _price;
+contract ExampleContract is PriceAwareOwnable {
+
+  uint256 private lastPrice = 0;
+  
+  function setPrice() public {
+    uint256 ethPrice = getPriceFromMsg(bytes32("TSLA"));
+    lastPrice = ethPrice;
+  }
+
+  function getLastPrice() public view returns(uint256) {
+    return lastPrice;
   }
 }
